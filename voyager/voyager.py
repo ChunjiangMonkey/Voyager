@@ -22,7 +22,7 @@ class Voyager:
         server_port: int = 3000,
         openai_api_key: str = None,
         env_wait_ticks: int = 20,
-        env_request_timeout: int = 600,
+        env_request_timeout: int = 10,
         max_iterations: int = 160,
         reset_placed_if_failed: bool = False,
         action_agent_model_name: str = "gpt-4",
@@ -313,6 +313,9 @@ class Voyager:
         self.last_events = self.env.step("")
 
         while True:
+            print(
+                f"\033[Iteration: {self.recorder.iteration}, max iteration number: { self.max_iterations}\033[0m"
+            )
             if self.recorder.iteration > self.max_iterations:
                 print("Iteration limit reached")
                 break

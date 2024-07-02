@@ -76,7 +76,7 @@ async function placeItems (bot: Bot, chestPos: Vec3, itemFilter: ItemFilter, cb?
   }
   const chest = await bot.openChest(chestBlock)
   for (const item of bot.inventory.items()) {
-    if (!itemFilter(item)) continue
+    if (!(item)) continue
     if (chest.firstEmptyContainerSlot() === null) {
       // We have items that didn't fit.
       return true
