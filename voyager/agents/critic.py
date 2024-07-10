@@ -7,12 +7,16 @@ from langchain.schema import HumanMessage, SystemMessage
 class CriticAgent:
     def __init__(
         self,
+        api_key,
+        base_url,
         model_name="gpt-3.5-turbo",
         temperature=0,
         request_timout=120,
         mode="auto",
     ):
         self.llm = ChatOpenAI(
+            api_key=api_key,
+            base_url=base_url,
             model_name=model_name,
             temperature=temperature,
             request_timeout=request_timout,

@@ -17,10 +17,13 @@ from .agents import SkillManager
 class Voyager:
     def __init__(
         self,
+        api_key: str = None,
+        base_url: str = None,
+        openai_api_key: str = None,
+        openai_embedding_model="text-embedding-ada-002",
         mc_port: int = None,
         azure_login: Dict[str, str] = None,
         server_port: int = 3000,
-        openai_api_key: str = None,
         env_wait_ticks: int = 20,
         env_request_timeout: int = 10,
         max_iterations: int = 160,
@@ -112,10 +115,12 @@ class Voyager:
         self.max_iterations = max_iterations
 
         # set openai api key
-        os.environ["OPENAI_API_KEY"] = openai_api_key
+        # os.environ["OPENAI_API_KEY"] = openai_api_key
 
         # init agents
         self.action_agent = ActionAgent(
+            api_key=api_key,
+            base_url=base_url,
             model_name=action_agent_model_name,
             temperature=action_agent_temperature,
             request_timout=openai_api_request_timeout,
@@ -126,6 +131,10 @@ class Voyager:
         )
         self.action_agent_task_max_retries = action_agent_task_max_retries
         self.curriculum_agent = CurriculumAgent(
+            api_key=api_key,
+            base_url=base_url,
+            openai_api_key=openai_api_key,
+            openai_embedding_model=openai_embedding_model,
             model_name=curriculum_agent_model_name,
             temperature=curriculum_agent_temperature,
             qa_model_name=curriculum_agent_qa_model_name,
@@ -138,12 +147,18 @@ class Voyager:
             core_inventory_items=curriculum_agent_core_inventory_items,
         )
         self.critic_agent = CriticAgent(
+            api_key=api_key,
+            base_url=base_url,
             model_name=critic_agent_model_name,
             temperature=critic_agent_temperature,
             request_timout=openai_api_request_timeout,
             mode=critic_agent_mode,
         )
         self.skill_manager = SkillManager(
+            api_key=api_key,
+            base_url=base_url,
+            openai_api_key=openai_api_key,
+            openai_embedding_model=openai_embedding_model,
             model_name=skill_manager_model_name,
             temperature=skill_manager_temperature,
             retrieval_top_k=skill_manager_retrieval_top_k,

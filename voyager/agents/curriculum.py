@@ -15,6 +15,10 @@ from langchain.vectorstores import Chroma
 class CurriculumAgent:
     def __init__(
         self,
+        api_key,
+        base_url,
+        openai_api_key,
+        openai_embedding_model="text-embedding-ada-002",
         model_name="gpt-3.5-turbo",
         temperature=0,
         qa_model_name="gpt-3.5-turbo",
@@ -27,11 +31,15 @@ class CurriculumAgent:
         core_inventory_items: str | None = None,
     ):
         self.llm = ChatOpenAI(
+            api_key=api_key,
+            base_url=base_url,
             model_name=model_name,
             temperature=temperature,
             request_timeout=request_timout,
         )
         self.qa_llm = ChatOpenAI(
+            api_key=api_key,
+            base_url=base_url,
             model_name=qa_model_name,
             temperature=qa_temperature,
             request_timeout=request_timout,
@@ -57,7 +65,9 @@ class CurriculumAgent:
         # vectordb for qa cache
         self.qa_cache_questions_vectordb = Chroma(
             collection_name="qa_cache_questions_vectordb",
-            embedding_function=OpenAIEmbeddings(),
+            embedding_function=OpenAIEmbeddings(
+                api_key=openai_api_key, model=openai_embedding_model
+            ),
             persist_directory=f"{ckpt_dir}/curriculum/vectordb",
         )
         assert self.qa_cache_questions_vectordb._collection.count() == len(

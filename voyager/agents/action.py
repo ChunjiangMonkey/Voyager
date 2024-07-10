@@ -14,6 +14,8 @@ from voyager.control_primitives_context import load_control_primitives_context
 class ActionAgent:
     def __init__(
         self,
+        api_key,
+        base_url,
         model_name="gpt-3.5-turbo",
         temperature=0,
         request_timout=120,
@@ -32,6 +34,8 @@ class ActionAgent:
         else:
             self.chest_memory = {}
         self.llm = ChatOpenAI(
+            api_key=api_key,
+            base_url=base_url,
             model_name=model_name,
             temperature=temperature,
             request_timeout=request_timout,
@@ -49,7 +53,9 @@ class ActionAgent:
                     self.chest_memory.pop(position)
             else:
                 if chest != "Invalid":
-                    print(f"\033[32mAction Agent saving chest {position}: {chest}\033[0m")
+                    print(
+                        f"\033[32mAction Agent saving chest {position}: {chest}\033[0m"
+                    )
                     self.chest_memory[position] = chest
         U.dump_json(self.chest_memory, f"{self.ckpt_dir}/action/chest_memory.json")
 

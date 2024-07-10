@@ -13,6 +13,10 @@ from voyager.control_primitives import load_control_primitives
 class SkillManager:
     def __init__(
         self,
+        api_key,
+        base_url,
+        openai_api_key,
+        openai_embedding_model="text-embedding-ada-002",
         model_name="gpt-3.5-turbo",
         temperature=0,
         retrieval_top_k=5,
@@ -21,6 +25,8 @@ class SkillManager:
         resume=False,
     ):
         self.llm = ChatOpenAI(
+            api_key=api_key,
+            base_url=base_url,
             model_name=model_name,
             temperature=temperature,
             request_timeout=request_timout,
@@ -39,7 +45,9 @@ class SkillManager:
         self.ckpt_dir = ckpt_dir
         self.vectordb = Chroma(
             collection_name="skill_vectordb",
-            embedding_function=OpenAIEmbeddings(),
+            embedding_function=OpenAIEmbeddings(
+                api_key=openai_api_key, model=openai_embedding_model
+            ),
             persist_directory=f"{ckpt_dir}/skill/vectordb",
         )
         assert self.vectordb._collection.count() == len(self.skills), (
